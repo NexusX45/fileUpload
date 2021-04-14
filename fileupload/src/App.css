@@ -1,0 +1,25 @@
+.App {
+  background-color: rgb(214, 214, 214);
+  min-height: 100vh;
+}
+
+.card {
+  position: relative;
+  top: 15vh;
+  background-color: white;
+  height: 500px;
+  width: 500px;
+}
+
+.button-upload {
+  position: relative;
+  cursor: pointer;
+  width: 500px;
+  height: 40px;
+  background-color: rgb(4, 223, 157);
+  top: 150px;
+}
+
+.hidden {
+  display: none;
+}
