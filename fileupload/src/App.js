@@ -29,13 +29,24 @@ function App() {
     for (let i = 0; i < files.length; i++) {
       data.append("file", files[i]);
     }
-    axios
-      .post("http://localhost:8000/upload", data, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      })
-      .then((res) => console.log(res));
+
+    if (files.length > 1) {
+      axios
+        .post("http://localhost:8000/uploadmultiple", data, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((res) => console.log(res));
+    } else {
+      axios
+        .post("http://localhost:8000/upload", data, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((res) => console.log(res));
+    }
   };
   useEffect(() => {
     console.log(files.length);

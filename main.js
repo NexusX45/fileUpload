@@ -7,23 +7,40 @@ var cors = require("cors");
 var fs = require("fs");
 
 app.use(cors());
-app.use(fileupload());
+// app.use(fileupload());
 app.use("/files", express.static(__dirname + "/files"));
 
-app.post("/upload", (req, res, next) => {
-  console.log(req.files);
-  let imageFile = req.files.file;
-  //   fs.writeFile(`file/${req.files.file.name}`, req.files.file.data, (err) => {
-
-  imageFile.mv(`${__dirname}/files/${req.files.file.name}`, function (err) {
-    if (err) {
-      return res.status(500).send(err);
-    }
-
-    res.json({ file: `files/${req.files.file.name}` });
-  });
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "./files");
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname);
+  },
 });
-// catch 404 and forward to error handler
+
+var upload = multer({ storage: storage });
+
+app.post("/uploadmultiple", upload.array("file", 12), (req, res, next) => {
+  const files = req.files;
+  console.log(files);
+  if (!files) {
+    const error = new Error("Please choose files");
+    error.httpStatusCode = 400;
+    return next(error);
+  }
+
+  res.send(files);
+});
+
+app.post("/upload", upload.single("file"), (req, res) => {
+  try {
+    res.send(req.file);
+  } catch (err) {
+    res.send(400);
+  }
+});
+
 app.use(function (req, res, next) {
   const err = new Error("Not Found");
   err.status = 404;
